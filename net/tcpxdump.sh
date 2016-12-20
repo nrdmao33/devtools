@@ -1,0 +1,2 @@
+tcpdump -xx -nn -v $*
+
