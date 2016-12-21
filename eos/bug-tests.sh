@@ -42,16 +42,24 @@ BEGIN {
     exit(0)
 }
 
-check == 1 && $3 ~ /^'$PROJECT'$/ && $1 ~ /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/ && check == 1 {
+check == 1 && $3 ~ /^'$PROJECT'$/ && $1 ~ /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/ {
     #printf("NF=%d $0=%s\n", NF, $0)
-    n = split($7, a, "/")
+    if ($7 == "autotest") {
+       start = 9
+    } else {
+       start = 7
+    }
+    n = split($start, a, "/")
     if (n != 2) {
         next # Ignore strange test file descriptions
-        #print "Error: unexpected test file description:", $7
+        print "Error: unexpected test file description:", $start
 	#exit(0)
     }
     printf("/src/%s/ptest/%s ", a[1], a[2])
-    for (i = 8; i <= NF; i++) {
+    for (i = start + 1; i <= NF; i++) {
+        if ($i == "against") {
+            break
+        }
     	printf("%s ", $i)
     }
     print ""
