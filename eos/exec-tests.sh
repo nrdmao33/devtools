@@ -26,17 +26,30 @@ do
 done
 
 rm *.testlog > /dev/null 2>&1
-> exec-test-summary.txt
+SUMMARY=$(pwd)/exec-test-summary.txt
+> $SUMMARY
 
 while read line
 do
     set $line
     TEST_FILE=$1
     LOGFILE=$(echo $line | sed -e 's/[ \t][ \t]*/_/g' -e 's/=/_/g' ).testlog
+    TEST_DIR=$(dirname ${TEST_FILE})
+    cd ${TEST_DIR}
     eval $* < /dev/null > ${LOGFILE} 2>&1
     R=$?
-    if [ $R != 0 ]
-    then echo FAIL RC=$R COMMAND=\"$*\" >> exec-test-summary.txt
-    else echo SUCCESS COMMAND=\"$*\" >> exec-test-summary.txt
-    fi
+    case $R in
+        0 )
+            echo SUCCESS RC=$R COMMAND=\"$*\" >> $SUMMARY
+            ;;
+        1 )
+            echo PSUCCESS RC=$R COMMAND=\"$*\" >> $SUMMARY
+            ;;
+        69 )
+            echo SKIP RC=$R COMMAND=\"$*\" >> $SUMMARY
+            ;;
+        * )
+            echo FAIL RC=$R COMMAND=\"$*\" >> $SUMMARY
+            ;;
+    esac
 done

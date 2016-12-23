@@ -55,13 +55,13 @@ check == 1 && $3 ~ /^'$PROJECT'$/ && $1 ~ /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9]
         print "Error: unexpected test file description:", $start
 	#exit(0)
     }
-    printf("/src/%s/ptest/%s ", a[1], a[2])
+    printf("/src/%s/ptest/%s", a[1], a[2])
     for (i = start + 1; i <= NF; i++) {
         if ($i == "against") {
             break
         }
-    	printf("%s ", $i)
+    	printf(" %s", $i)
     }
     print ""
-}'
+}' | sort -u
 
