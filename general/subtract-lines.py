@@ -3,12 +3,13 @@
 from optparse import OptionParser
 import sys
 
-usage = "%prog -m MINUEND -s SUBTRAHEND [ -o OUTPUT ]"
+usage = "%prog -m MINUEND -s SUBTRAHEND[,SUBTRAHEND...] [ -o OUTPUT ]"
 parser = OptionParser(usage=usage)
 parser.add_option("-m", "--minuend", action="store", metavar="MINUEND",
                   help = "(required) The file to be subtracted from.")
-parser.add_option("-s", "--subtrahend", action="store", metavar="SUBTRAHEND",
-                  help = "(required) The file to subtract")
+parser.add_option("-s", "--subtrahend", action="store",
+                  metavar="SUBTRAHEND[,...]",
+                  help = "(required) The file(s) to subtract")
 parser.add_option("-o", "--output", action="store", metavar="OUTPUT",
                   help = "(optional) Output to file, if not specified, stdout")
 (options, args) = parser.parse_args()
@@ -27,9 +28,12 @@ f = open(options.minuend)
 minuend = f.readlines()
 f.close()
 
-f = open(options.subtrahend)
-subtrahend = f.readlines()
-f.close()
+subtrahend_file_names = options.subtrahend.split(',')
+subtrahends = []
+for file in subtrahend_file_names:
+    f = open(file)
+    subtrahends.append(f.readlines())
+    f.close()
 
 if options.output:
     f = open(options.output, "w")
@@ -37,6 +41,10 @@ else:
     f = sys.stdout
 
 for line in minuend:
-    if not line in subtrahend:
+    found = False
+    for subtrahend in subtrahends:
+        if line in subtrahend:
+            found = True
+            break
+    if not found:
         f.write(line)
-
