@@ -31,8 +31,16 @@ SUMMARY=$(pwd)/exec-test-summary.txt
 
 while read line
 do
+    if [ -z "$(echo $line | sed 's/ \t//')" ]
+    then
+        continue
+    fi
     set $line
     TEST_FILE=$1
+    if [ -z "$TEST_FILE" ]
+    then
+	continue
+    fi
     LOGFILE=$(echo $line | sed -e 's/[ \t][ \t]*/_/g' -e 's/=/_/g' ).testlog
     TEST_DIR=$(dirname ${TEST_FILE})
     cd ${TEST_DIR}
@@ -41,15 +49,19 @@ do
     case $R in
         0 )
             echo SUCCESS RC=$R COMMAND=\"$*\" >> $SUMMARY
+            echo SUCCESS RC=$R COMMAND=\"$*\"
             ;;
         1 )
             echo PSUCCESS RC=$R COMMAND=\"$*\" >> $SUMMARY
+            echo PSUCCESS RC=$R COMMAND=\"$*\"
             ;;
         69 )
             echo SKIP RC=$R COMMAND=\"$*\" >> $SUMMARY
+            echo SKIP RC=$R COMMAND=\"$*\"
             ;;
         * )
             echo FAIL RC=$R COMMAND=\"$*\" >> $SUMMARY
+            echo FAIL RC=$R COMMAND=\"$*\"
             ;;
     esac
 done

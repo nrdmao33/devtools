@@ -3,7 +3,7 @@
 
 # Support all, clean and install for all subdirs.
 #
-SUBDIRS = eos general linux net sandbox
+SUBDIRS = eos general linux net sandbox templates
 SUBDIRS_ALL = $(SUBDIRS:%=all-%)
 SUBDIRS_CLEAN = $(SUBDIRS:%=clean-%)
 SUBDIRS_INSTALL = $(SUBDIRS:%=install-%)
