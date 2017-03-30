@@ -148,10 +148,12 @@ Apply local mods to a package built as defined above:
 3. a4 add new patch files generated, a4 edit .spec file to include new patches.
 
 Update a package to a new version of the public repo:
-1. cd /src/<pkg>; gamp --make repo
-2. cd <repo>; git checkout <new-commit-id>
-3. if there were any patches, git merge local changes to new commit ID, the local
-   changes should be at a tag called arista.
+1. cd /src/<pkg>; gamp --make repo; cd <repo>
+   - at this point you should be on the arista branch in the repo that represents
+     the source code of the archive and patches.
+2. git rebase <new-commit-id>
+   - This will move the patches (if any) to <new-commit-id> and allow a new archive
+     and set of patches to be created from there.
 4. a4 edit all existing patch files.
 5. gamp --make archive --commit-id <new-commit-id>
 6. a4 add <new-archive-file>; a4 delete <old-archive-file>
@@ -203,6 +205,13 @@ do
         --) shift ; break ;;
     esac
 done
+
+if [ -z "$MAKE" ]
+then
+    echo "you must specify the -m|--make option"
+    echo $HELP
+    exit 2
+fi
 
 if [ -z "$PACKAGE" ]
 then
