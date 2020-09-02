@@ -3,6 +3,14 @@
 
 # Support all, clean and install for all subdirs.
 #
+BUILD_DIR := $(shell pwd)/build
+BUILD_BIN := $(BUILD_DIR)/bin
+BUILD_LIB := $(BUILD_DIR)/lib
+
+INSTALL_DIR := ${HOME}
+INSTALL_BIN := $(INSTALL_DIR)/bin
+INSTALL_LIB := $(INSTALL_DIR)/lib
+
 SUBDIRS = eos general linux net sandbox templates
 SUBDIRS_ALL = $(SUBDIRS:%=all-%)
 SUBDIRS_CLEAN = $(SUBDIRS:%=clean-%)

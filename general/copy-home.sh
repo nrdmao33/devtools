@@ -18,8 +18,9 @@ This script does not copy all files from the home directory to the new server.
  -p|--print     Print the files to copy over but do not actually copy the files.
  -f|--file      Take files from the specified file rather than generating the
                 files from this script.
+ -a|--archive   Create the archive <target>.gz.tar only but do not copy to <target>.
 "
-TEMP=$(getopt -l 'help,print,file:' -o 'h,p,f:' -- "$@")
+TEMP=$(getopt -l 'help,print,archive,file:' -o 'h,p,a,f:' -- "$@")
 if [ $? != 0 ]
 then
     echo "$HELP"
@@ -27,6 +28,7 @@ then
 fi
 FILE=
 PRINT=
+ARCHIVE=
 set -- $TEMP
 while true
 do
@@ -39,6 +41,8 @@ do
             echo "$USAGE" | more
             exit 0
             ;;
+	-a|--archive)
+	    ARCHIVE=1 ; shift ;;
         --) shift ; break ;;
     esac
 done
@@ -96,7 +100,13 @@ then
     exit 0
 fi
 
-cat $FILE | xargs tar -czf $ARCHIVE 
+cat $FILE | xargs tar -czf $ARCHIVE
+if [ -n "$ARCHIVE" ]
+then
+    mv $ARCHIVE $TARGET.tar.gz
+    exit 0
+fi
+
 set -x
 if scp $ARCHIVE $TARGET:$ARCHIVE
 then
