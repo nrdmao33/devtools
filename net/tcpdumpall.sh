@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 IAM=$(basename $0)
 USAGE="$IAM [-p <prefix> ]

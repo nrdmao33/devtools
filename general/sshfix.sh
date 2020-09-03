@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #
 # Delete the offending line number from the ~/.ssh/known_hosts
 #

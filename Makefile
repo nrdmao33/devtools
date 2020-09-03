@@ -11,7 +11,7 @@ INSTALL_DIR := ${HOME}
 INSTALL_BIN := $(INSTALL_DIR)/bin
 INSTALL_LIB := $(INSTALL_DIR)/lib
 
-SUBDIRS = eos general linux net sandbox templates
+SUBDIRS = general linux net sandbox templates
 SUBDIRS_ALL = $(SUBDIRS:%=all-%)
 SUBDIRS_CLEAN = $(SUBDIRS:%=clean-%)
 SUBDIRS_INSTALL = $(SUBDIRS:%=install-%)
