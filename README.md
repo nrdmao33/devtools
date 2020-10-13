@@ -3,7 +3,7 @@ Tools used for common software development and other computing tasks. These tool
 
 Build and install the tools as follows
 
-make
+make  
 make install
 
 Tools will be installed into ~/bin/
