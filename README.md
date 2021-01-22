@@ -3,8 +3,8 @@ Tools used for common software development and other computing tasks. These tool
 
 Build and install the tools as follows
 
-make
-make install
+<code>make</code>  
+<code>make install</code>
 
-Tools will be installed into ~/bin/
+Tools will be installed into <code>~/bin/</code>
 
