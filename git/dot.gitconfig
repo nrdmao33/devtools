@@ -1,0 +1,8 @@
+[user]
+	email = nrdmao@gmail.com
+	name = James Murphy
+[alias]
+        lg = log --graph --oneline --decorate
+        lga = log --graph --oneline --decorate --all
+[color]
+        ui = true
