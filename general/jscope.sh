@@ -122,7 +122,7 @@ then
             done
         fi
         find $FIND_LIST $FOLLOW -type f -print  | \
-            egrep '.*\.[chSs]$|.*\.cpp$|.*\.cc$' > $DATABASE_DIR/file_list
+            egrep '.*\.[chSs]$|.*\.cpp$|.*\.cc$|\.[ch]xx$' > $DATABASE_DIR/file_list
     fi
     if [ "$USR_INCLUDE" = "TRUE" ]
     then
