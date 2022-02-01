@@ -1,0 +1,13 @@
+;;; Special emacs init file to be used when editing normal C files like
+;;; those found in the linux source tree.
+;;;
+
+(setq user-init-file
+      (expand-file-name "init.el"
+			(expand-file-name "emacs/lisp" "~")))
+(setq custom-file
+      (expand-file-name "custom.el"
+			(expand-file-name "emacs/lisp" "~")))
+
+(load-file user-init-file)
+(load-file custom-file)

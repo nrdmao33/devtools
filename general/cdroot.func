@@ -1,0 +1,16 @@
+# function to cd to the root of a git tree
+
+function cdroot {
+    OPWD=$(pwd)
+    while [ $(pwd) != "/" ]
+    do
+	if [ -d .git ]
+	then
+	    return
+	fi
+	cd ..
+    done
+    # Restore original working directory if no git repo found
+    cd $OPWD
+    return
+}

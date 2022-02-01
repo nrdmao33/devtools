@@ -1,0 +1,10 @@
+#
+# setsrc
+#
+# This function sets variables for working on a tree
+#
+
+function setsrc {
+    SB_SRC=$(pwd)
+    export SB_SRC
+}

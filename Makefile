@@ -4,14 +4,9 @@
 # Support all, clean and install for all subdirs.
 #
 BUILD_DIR := $(shell pwd)/build
-BUILD_BIN := $(BUILD_DIR)/bin
-BUILD_LIB := $(BUILD_DIR)/lib
+include dirs.mk
 
-INSTALL_DIR := ${HOME}
-INSTALL_BIN := $(INSTALL_DIR)/bin
-INSTALL_LIB := $(INSTALL_DIR)/lib
-
-SUBDIRS = general linux net sandbox templates
+SUBDIRS = general linux net sandbox templates emacs
 SUBDIRS_ALL = $(SUBDIRS:%=all-%)
 SUBDIRS_CLEAN = $(SUBDIRS:%=clean-%)
 SUBDIRS_INSTALL = $(SUBDIRS:%=install-%)
@@ -28,6 +23,10 @@ $(SUBDIRS_ALL):
 	@if [ ! -d $(BUILD_DIR) ]; then mkdir -p $(BUILD_DIR); fi
 	@if [ ! -d $(BUILD_BIN) ]; then mkdir -p $(BUILD_BIN); fi
 	@if [ ! -d $(BUILD_LIB) ]; then mkdir -p $(BUILD_LIB); fi
+	@if [ ! -d $(BUILD_FUNC) ]; then mkdir -p $(BUILD_FUNC); fi
+	@if [ ! -d $(BUILD_EMACS) ]; then mkdir -p $(BUILD_EMACS); fi
+	@if [ ! -d $(BUILD_DOT) ]; then mkdir -p $(BUILD_DOT); fi
+
 	$(MAKE) $(MAKE_FLAGS) -C $(@:all-%=%)
 
 $(SUBDIRS_CLEAN):
@@ -37,4 +36,6 @@ $(SUBDIRS_INSTALL):
 	@if [ ! -d $(INSTALL_DIR) ]; then mkdir -p $(INSTALL_DIR); fi
 	@if [ ! -d $(INSTALL_BIN) ]; then mkdir -p $(INSTALL_BIN); fi
 	@if [ ! -d $(INSTALL_LIB) ]; then mkdir -p $(INSTALL_LIB); fi
+	@if [ ! -d $(INSTALL_FUNC) ]; then mkdir -p $(INSTALL_FUNC); fi
+	@if [ ! -d $(INSTALL_EMACS) ]; then mkdir -p $(INSTALL_EMACS); fi
 	$(MAKE) $(MAKE_FLAGS) -C $(@:install-%=%) install

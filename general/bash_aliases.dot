@@ -1,0 +1,21 @@
+# Since most .bashrc files will soure a .bash_alias file, use that to as a
+# general customization hook for the bash environment
+
+# Read in custom functions.
+if [ -d ~/.func ]
+then
+    for file in ~/.func/*
+    do
+        eval . $file
+    done
+fi
+
+# Run in vi mode
+set -o vi
+
+# Set the path for local bin
+PATH=$PATH:~/bin
+
+# Some aliases
+alias emacs='emacs -nw'
+alias xterm='xterm -sb -sl 5000 -geometry 128x72 -fn 8x16'
