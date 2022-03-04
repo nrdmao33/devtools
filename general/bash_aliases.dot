@@ -19,3 +19,5 @@ PATH=$PATH:~/bin
 # Some aliases
 alias emacs='emacs -nw'
 alias xterm='xterm -sb -sl 5000 -geometry 128x72 -fn 8x16'
+
+export EDITOR=emacs
