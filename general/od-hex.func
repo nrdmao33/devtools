@@ -1,0 +1,4 @@
+# function wrapper for od hexdump
+function odhex {
+    od -A x -t x1 -v $*
+}
