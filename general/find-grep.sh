@@ -8,7 +8,9 @@ IAM=$(basename $0)
 USAGE="$IAM [-h] [-d <dir(s)>] <expression>
     where:
         -d <dir(s)> The director(y|ies) to which find should restrict its
-	   	     search ((enclose in quotes for multiple directories).
+	   	    search ((enclose in quotes for multiple directories).
+        -t          search for the <expression> as a C language token.
+                    As such <expression> becomes [^0-9a-zA-Z_]<expression>[^0-9a-zA-Z_]
         -h          Print this message.
 
     $IAM finds files from the current working directory matching regular
@@ -16,8 +18,9 @@ USAGE="$IAM [-h] [-d <dir(s)>] <expression>
 "
 
 DIR=.
+TOKEN_RE=""
 
-while getopts :hd: c
+while getopts :htd: c
 do
     case $c in
     h)
@@ -25,6 +28,8 @@ do
         exit 0;;
     d)
         DIR="$OPTARG";;
+    t)
+	TOKEN_RE='[^0-9a-zA-Z_]';;
     :)
         echo "$IAM: $OPTARG requires a value:"
         echo "$USAGE"
@@ -44,4 +49,4 @@ then
     exit 2
 fi
 
-find $DIR -type f | xargs grep -I -n "$1" 2> /dev/null
+find $DIR -type f | xargs grep -I -n "${TOKEN_RE}${1}${TOKEN_RE}" 2> /dev/null
