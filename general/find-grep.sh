@@ -11,6 +11,7 @@ USAGE="$IAM [-h] [-d <dir(s)>] <expression>
 	   	    search ((enclose in quotes for multiple directories).
         -t          search for the <expression> as a C language token.
                     As such <expression> becomes [^0-9a-zA-Z_]<expression>[^0-9a-zA-Z_]
+        -x          Exclude and paths that contain 'test/' or 'tests/'
         -h          Print this message.
 
     $IAM finds files from the current working directory matching regular
@@ -19,8 +20,9 @@ USAGE="$IAM [-h] [-d <dir(s)>] <expression>
 
 DIR=.
 TOKEN_RE=""
+EXCLUDE=""
 
-while getopts :htd: c
+while getopts :htxd: c
 do
     case $c in
     h)
@@ -30,6 +32,8 @@ do
         DIR="$OPTARG";;
     t)
 	TOKEN_RE='[^0-9a-zA-Z_]';;
+    x)
+	EXCLUDE="| egrep -v 'test/|tests'";;
     :)
         echo "$IAM: $OPTARG requires a value:"
         echo "$USAGE"
@@ -49,4 +53,4 @@ then
     exit 2
 fi
 
-find $DIR -type f | xargs grep -I -n "${TOKEN_RE}${1}${TOKEN_RE}" 2> /dev/null
+eval find $DIR -type f $EXCLUDE | xargs egrep -I -n "${TOKEN_RE}${1}${TOKEN_RE}" 2> /dev/null

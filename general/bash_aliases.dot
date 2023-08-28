@@ -19,5 +19,6 @@ PATH=$PATH:~/bin
 # Some aliases
 alias emacs='emacs -nw'
 alias xterm='xterm -sb -sl 5000 -geometry 128x72 -fn 8x16'
+alias cdv='if [ -n "$SB_SRC" ]; then cd $SB_SRC/libsnt_vehicle; else echo "SB_SRC not set"; fi'
 
 export EDITOR=emacs
