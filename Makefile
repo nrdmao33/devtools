@@ -6,7 +6,7 @@
 BUILD_DIR := $(shell pwd)/build
 include dirs.mk
 
-SUBDIRS = general linux net sandbox templates emacs git
+SUBDIRS = general linux net sandbox templates emacs git system
 SUBDIRS_ALL = $(SUBDIRS:%=all-%)
 SUBDIRS_CLEAN = $(SUBDIRS:%=clean-%)
 SUBDIRS_INSTALL = $(SUBDIRS:%=install-%)

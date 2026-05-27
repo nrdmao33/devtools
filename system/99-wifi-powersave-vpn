@@ -1,0 +1,14 @@
+#!/bin/bash
+WIFI_IFACE="wlp0s20f3"
+VPN_IFACE="cscotun0"
+
+[ "$1" = "$VPN_IFACE" ] || exit 0
+
+case "$2" in
+    up)
+        iw dev "$WIFI_IFACE" set power_save off
+        ;;
+    down)
+        iw dev "$WIFI_IFACE" set power_save on
+        ;;
+esac
