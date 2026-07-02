@@ -24,7 +24,13 @@ Bootstrap a tester machine (e.g. mst-tester-107.ie.sonatus.com):
      its authorized_keys. You will be prompted for your login password once.
   2. Clone and install ~/src/devtools ($DEVTOOLS_REPO).
   3. Clone ~/work/dev/tsdb_stest ($TSDB_STEST_REPO).
-  4. Copy the locally built snt_dbc_convert binary to
+  4. Install git-lfs if not already present (may prompt for your sudo
+     password), run 'git lfs install', then 'git lfs pull' in tsdb_stest to
+     fetch large files (e.g. can_maps.arxml.gz) instead of leaving pointer
+     stubs.
+  5. Install uv (astral.sh installer) if not already present, and make sure
+     ~/.bashrc sources ~/.local/bin/env so it stays on PATH in future shells.
+  6. Copy the locally built snt_dbc_convert binary to
      ~/work/dev/static_build/install/bin/ on the target, so setup_board.sh
      does not need to compile static_build on the tester.
 "
@@ -95,6 +101,24 @@ $SSH "$TARGET" "
     mkdir -p ~/work/dev
     [ -d ~/work/dev/tsdb_stest ] || git clone $TSDB_STEST_REPO ~/work/dev/tsdb_stest
 "
+
+echo "==> git-lfs"
+if ! $SSH "$TARGET" 'command -v git-lfs' >/dev/null 2>&1
+then
+    echo "    installing git-lfs (may prompt for your sudo password)"
+    ssh -t "$TARGET" 'sudo apt-get install -y git-lfs'
+fi
+$SSH "$TARGET" '
+    git lfs install
+    cd ~/work/dev/tsdb_stest && git lfs pull
+'
+
+echo "==> uv"
+$SSH "$TARGET" '
+    [ -x ~/.local/bin/uv ] || curl -LsSf https://astral.sh/uv/install.sh | sh
+    grep -qxF "source ~/.local/bin/env" ~/.bashrc 2>/dev/null ||
+        echo "source ~/.local/bin/env" >> ~/.bashrc
+'
 
 echo "==> static_build/install/bin/snt_dbc_convert"
 if [ ! -e "$LOCAL_DBC_CONVERT" ]
