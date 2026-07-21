@@ -30,7 +30,11 @@ Bootstrap a tester machine (e.g. mst-tester-107.ie.sonatus.com):
      stubs.
   5. Install uv (astral.sh installer) if not already present, and make sure
      ~/.bashrc sources ~/.local/bin/env so it stays on PATH in future shells.
-  6. Copy the locally built snt_dbc_convert binary to
+  6. Install Go (via 'sudo apt install golang-go', may prompt for your sudo
+     password) if not already present, then install Bazelisk
+     (github.com/bazelbuild/bazelisk@v1.19.0) and add a 'bazel' alias to
+     ~/.bashrc, per static_build's README.
+  7. Copy the locally built snt_dbc_convert binary to
      ~/work/dev/static_build/install/bin/ on the target, so setup_board.sh
      does not need to compile static_build on the tester.
 "
@@ -118,6 +122,22 @@ $SSH "$TARGET" '
     [ -x ~/.local/bin/uv ] || curl -LsSf https://astral.sh/uv/install.sh | sh
     grep -qxF "source ~/.local/bin/env" ~/.bashrc 2>/dev/null ||
         echo "source ~/.local/bin/env" >> ~/.bashrc
+'
+
+echo "==> Go (for Bazelisk)"
+if ! $SSH "$TARGET" 'command -v go' >/dev/null 2>&1
+then
+    echo "    installing golang-go (may prompt for your sudo password)"
+    ssh -t "$TARGET" 'sudo apt-get install -y golang-go'
+fi
+
+echo "==> Bazelisk"
+$SSH "$TARGET" '
+    GOPATH=$(go env GOPATH)
+    [ -x "$GOPATH/bin/bazelisk" ] ||
+        go install github.com/bazelbuild/bazelisk@v1.19.0
+    grep -qxF "alias bazel=$GOPATH/bin/bazelisk" ~/.bashrc 2>/dev/null ||
+        echo "alias bazel=$GOPATH/bin/bazelisk" >> ~/.bashrc
 '
 
 echo "==> static_build/install/bin/snt_dbc_convert"
