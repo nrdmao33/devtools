@@ -13,6 +13,7 @@ DEVTOOLS_REPO="git@github.com:nrdmao33/devtools.git"
 TSDB_STEST_REPO="git@github.com:sonatus/tsdb_stest.git"
 KEY_PRIV=~/.ssh/id_ed25519
 KEY_PUB=~/.ssh/id_ed25519.pub
+TTTECH_IDENTITY=~/.ssh/id_ed25519_tttech
 LOCAL_DBC_CONVERT=~/work/dev/static_build/install/bin/snt_dbc_convert
 
 USAGE="
@@ -22,19 +23,23 @@ Bootstrap a tester machine (e.g. mst-tester-107.ie.sonatus.com):
   1. Set up passwordless SSH access, if not already working, by copying
      ~/.ssh/id_ed25519{,.pub} to the target and adding the public key to
      its authorized_keys. You will be prompted for your login password once.
-  2. Clone and install ~/src/devtools ($DEVTOOLS_REPO).
-  3. Clone ~/work/dev/tsdb_stest ($TSDB_STEST_REPO).
-  4. Install git-lfs if not already present (may prompt for your sudo
+  2. Copy ~/.ssh/id_ed25519_tttech to the target, if present locally and not
+     already on the target. This is the identity_file used by
+     boards/tttech/setup_board.sh to SSH from the tester into the TTTech
+     board (see boards/tttech/board.yaml).
+  3. Clone and install ~/src/devtools ($DEVTOOLS_REPO).
+  4. Clone ~/work/dev/tsdb_stest ($TSDB_STEST_REPO).
+  5. Install git-lfs if not already present (may prompt for your sudo
      password), run 'git lfs install', then 'git lfs pull' in tsdb_stest to
      fetch large files (e.g. can_maps.arxml.gz) instead of leaving pointer
      stubs.
-  5. Install uv (astral.sh installer) if not already present, and make sure
+  6. Install uv (astral.sh installer) if not already present, and make sure
      ~/.bashrc sources ~/.local/bin/env so it stays on PATH in future shells.
-  6. Install Go (via 'sudo apt install golang-go', may prompt for your sudo
+  7. Install Go (via 'sudo apt install golang-go', may prompt for your sudo
      password) if not already present, then install Bazelisk
      (github.com/bazelbuild/bazelisk@v1.19.0) and add a 'bazel' alias to
      ~/.bashrc, per static_build's README.
-  7. Copy the locally built snt_dbc_convert binary to
+  8. Copy the locally built snt_dbc_convert binary to
      ~/work/dev/static_build/install/bin/ on the target, so setup_board.sh
      does not need to compile static_build on the tester.
 "
@@ -84,6 +89,19 @@ else
 fi
 
 SSH="ssh -o BatchMode=yes"
+
+echo "==> TTTech board identity file"
+if [ ! -e "$TTTECH_IDENTITY" ]
+then
+    echo "    local $TTTECH_IDENTITY not found, skipping" >&2
+elif $SSH "$TARGET" '[ -f ~/.ssh/id_ed25519_tttech ]'
+then
+    echo "    already present on $TARGET"
+else
+    $SSH "$TARGET" 'mkdir -p -m 700 ~/.ssh'
+    scp -o BatchMode=yes "$TTTECH_IDENTITY" "$TARGET:.ssh/id_ed25519_tttech"
+    $SSH "$TARGET" 'chmod 600 ~/.ssh/id_ed25519_tttech'
+fi
 
 echo "==> Trusting github.com host key on $TARGET"
 $SSH "$TARGET" '
